@@ -1,5 +1,11 @@
 # @vercel/next
 
+## 4.3.16
+
+### Patch Changes
+
+- Partial Prerendering Fallback Shells now respect the revalidate config and now do not produce route shells on-demand. ([#12268](https://github.com/vercel/vercel/pull/12268))
+
 ## 4.3.15
 
 ### Patch Changes
