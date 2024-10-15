@@ -156,7 +156,7 @@ export function spawnAsync(
 export function spawnCommand(cmd: string, args: string[], options: SpawnOptions = {}) {
   const opts = { ...options, prettyCommand: `${cmd} ${args.join(' ')}` };
   if (process.platform === 'win32') {
-    return spawn('cmd.exe', ['/C', cmd, ...args], opts);
+    return spawn('cmd.exe', ['/C', cmd, ...args.map(arg => `"${arg}"`)], opts);
   }
 
   return spawn(cmd, args, opts);
