@@ -154,19 +154,21 @@ export function spawnAsync(
 
 export function spawnCommand(command: string, options: SpawnOptions = {}) {
   const opts = { ...options, prettyCommand: command };
+  const [cmd, ...args] = command.split(' ');
   if (process.platform === 'win32') {
-    return spawn('cmd.exe', ['/C', command], opts);
+    return spawn('cmd.exe', ['/C', cmd, ...args], opts);
   }
 
-  return spawn('sh', ['-c', command], opts);
+  return spawn(cmd, args, opts);
 }
 
 export async function execCommand(command: string, options: SpawnOptions = {}) {
   const opts = { ...options, prettyCommand: command };
+  const [cmd, ...args] = command.split(' ');
   if (process.platform === 'win32') {
-    await spawnAsync('cmd.exe', ['/C', command], opts);
+    await spawnAsync('cmd.exe', ['/C', cmd, ...args], opts);
   } else {
-    await spawnAsync('sh', ['-c', command], opts);
+    await spawnAsync(cmd, args, opts);
   }
 
   return true;
