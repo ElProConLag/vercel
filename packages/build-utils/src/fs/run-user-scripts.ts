@@ -152,9 +152,8 @@ export function spawnAsync(
   });
 }
 
-export function spawnCommand(command: string, options: SpawnOptions = {}) {
-  const opts = { ...options, prettyCommand: command };
-  const [cmd, ...args] = command.split(' ');
+export function spawnCommand(cmd: string, args: string[], options: SpawnOptions = {}) {
+  const opts = { ...options, prettyCommand: `${cmd} ${args.join(' ')}` };
   if (process.platform === 'win32') {
     return spawn('cmd.exe', ['/C', cmd, ...args], opts);
   }
@@ -162,9 +161,8 @@ export function spawnCommand(command: string, options: SpawnOptions = {}) {
   return spawn(cmd, args, opts);
 }
 
-export async function execCommand(command: string, options: SpawnOptions = {}) {
-  const opts = { ...options, prettyCommand: command };
-  const [cmd, ...args] = command.split(' ');
+export async function execCommand(cmd: string, args: string[], options: SpawnOptions = {}) {
+  const opts = { ...options, prettyCommand: `${cmd} ${args.join(' ')}` };
   if (process.platform === 'win32') {
     await spawnAsync('cmd.exe', ['/C', cmd, ...args], opts);
   } else {

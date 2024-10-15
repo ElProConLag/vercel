@@ -2279,10 +2279,11 @@ export default class DevServer {
       })}`
     );
 
-    this.output.debug(`Spawning dev command: ${command}`);
+    const [cmd, ...args] = command.split(' ');
+    this.output.debug(`Spawning dev command: ${cmd} ${args.join(' ')}`);
 
     const proxyPort = new RegExp(port.toString(), 'g');
-    const p = spawnCommand(command, {
+    const p = spawnCommand(cmd, args, {
       stdio: ['inherit', 'pipe', 'pipe'],
       cwd,
       env,
