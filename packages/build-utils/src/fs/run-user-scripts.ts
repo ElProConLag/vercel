@@ -1,4 +1,5 @@
 import assert from 'assert';
+import shellQuote from 'shell-quote';
 import fs from 'fs-extra';
 import path from 'path';
 import Sema from 'async-sema';
@@ -163,12 +164,7 @@ export function spawnCommand(cmd: string, args: string[], options: SpawnOptions 
 
 export async function execCommand(cmd: string, args: string[], options: SpawnOptions = {}) {
   const opts = { ...options, prettyCommand: `${cmd} ${args.join(' ')}` };
-  if (process.platform === 'win32') {
-    await spawnAsync('cmd.exe', ['/C', cmd, ...args.map(arg => `"${arg}"`)], opts);
-  } else {
-    await spawnAsync(cmd, args, opts);
-  }
-
+  await spawnAsync(cmd, args, opts);
   return true;
 }
 
@@ -1212,7 +1208,8 @@ export async function runCustomInstallCommand({
     turboSupportsCorepackHome,
   });
   debug(`Running with $PATH:`, env?.PATH || '');
-  await execCommand(installCommand, {
+  const [cmd, ...args] = shellQuote.parse(installCommand);
+  await execCommand(cmd, args, {
     ...spawnOpts,
     env,
     cwd: destPath,
