@@ -1130,8 +1130,8 @@ import DOMPurify from 'dompurify';
 					embed   = '';
 
 					$.each(current.swf, function(name, val) {
-						content += '<param name="' + name + '" value="' + val + '"></param>';
-						embed   += ' ' + name + '="' + val + '"';
+						content += '<param name="' + DOMPurify.sanitize(name) + '" value="' + DOMPurify.sanitize(val) + '"></param>';
+						embed   += ' ' + DOMPurify.sanitize(name) + '="' + DOMPurify.sanitize(val) + '"';
 					});
 
 					content += '<embed src="' + DOMPurify.sanitize(href) + '" type="application/x-shockwave-flash" width="100%" height="100%"' + embed + '></embed></object>';
