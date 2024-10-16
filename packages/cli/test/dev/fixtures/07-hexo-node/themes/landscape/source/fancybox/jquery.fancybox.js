@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 /*!
  * fancyBox - jQuery Plugin
  * version: 2.1.5 (Fri, 14 Jun 2013)
@@ -10,7 +11,7 @@
  *
  */
 
-;(function (window, document, $, undefined) {
+;(function (window, document, $, DOMPurify, undefined) {
 	"use strict";
 
 	var H = $("html"),
@@ -1133,7 +1134,7 @@
 						embed   += ' ' + name + '="' + val + '"';
 					});
 
-					content += '<embed src="' + href + '" type="application/x-shockwave-flash" width="100%" height="100%"' + embed + '></embed></object>';
+					content += '<embed src="' + DOMPurify.sanitize(href) + '" type="application/x-shockwave-flash" width="100%" height="100%"' + embed + '></embed></object>';
 				break;
 			}
 
@@ -2014,4 +2015,4 @@
 		$("<style type='text/css'>.fancybox-margin{margin-right:" + (w2 - w1) + "px;}</style>").appendTo("head");
 	});
 
-}(window, document, jQuery));
+}(window, document, jQuery, DOMPurify));
