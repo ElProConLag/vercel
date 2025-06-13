@@ -128,8 +128,8 @@ export default class Client extends EventEmitter implements Stdio {
     const url = new URL(_url, this.apiUrl);
 
     // Validate that the hostname matches the expected apiUrl hostname
-    if (url.hostname !== new URL(this.apiUrl).hostname) {
-      throw new Error(`Invalid URL hostname: ${url.hostname}`);
+    if (url.hostname !== this.apiHostname) { // Assuming this.apiHostname is pre-calculated in the constructor
+      throw new Error(`Invalid URL hostname: ${url.hostname}. Expected ${this.apiHostname}.`);
     }
 
     if (opts.accountId || opts.useCurrentTeam !== false) {
