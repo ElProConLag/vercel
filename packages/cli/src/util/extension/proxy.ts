@@ -28,7 +28,7 @@ export function createProxy(client: Client): Server {
               throw new Error('Invalid query parameter detected');
             }
           }
-          return parsedUrl.pathname + '?' + searchParams.toString();
+          return parsedUrl.pathname + (searchParams.toString() ? '?' + searchParams.toString() : '');
         } catch {
           return '/';
         }
