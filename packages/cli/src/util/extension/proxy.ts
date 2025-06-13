@@ -16,7 +16,17 @@ export function createProxy(client: Client): Server {
       // Proxy to the upstream Vercel REST API
       const headers = toHeaders(req.headers);
       headers.delete('host');
-      const sanitizedUrl = req.url && req.url.startsWith('/') ? req.url : '/';
+      const sanitizedUrl = (() => {
+        try {
+          const parsedUrl = new URL(req.url || '/', 'http://localhost');
+          if (parsedUrl.pathname.includes('..')) {
+            throw new Error('Path traversal attempt detected');
+          }
+          return parsedUrl.pathname + parsedUrl.search;
+        } catch {
+          return '/';
+        }
+      })();
       const fetchRes = await client.fetch(sanitizedUrl, {
         headers,
         method: req.method,
