@@ -22,7 +22,13 @@ export function createProxy(client: Client): Server {
           if (parsedUrl.pathname.includes('..')) {
             throw new Error('Path traversal attempt detected');
           }
-          return parsedUrl.pathname + parsedUrl.search;
+          const searchParams = new URLSearchParams(parsedUrl.search);
+          for (const [key, value] of searchParams.entries()) {
+            if (key.includes('..') || value.includes('..')) {
+              throw new Error('Invalid query parameter detected');
+            }
+          }
+          return parsedUrl.pathname + '?' + searchParams.toString();
         } catch {
           return '/';
         }
