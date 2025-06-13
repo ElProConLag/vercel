@@ -75,6 +75,7 @@ export default class Client extends EventEmitter implements Stdio {
   requestIdCounter: number;
   input;
   telemetryEventStore: TelemetryEventStore;
+  private apiHostname: string;
 
   constructor(opts: ClientOptions) {
     super();
@@ -91,6 +92,7 @@ export default class Client extends EventEmitter implements Stdio {
     this.localConfigPath = opts.localConfigPath;
     this.requestIdCounter = 1;
     this.telemetryEventStore = opts.telemetryEventStore;
+    this.apiHostname = new URL(this.apiUrl).hostname;
 
     const theme = {
       prefix: gray('?'),
@@ -128,9 +130,21 @@ export default class Client extends EventEmitter implements Stdio {
     const url = new URL(_url, this.apiUrl);
 
     // Validate that the hostname matches the expected apiUrl hostname
-    if (url.hostname !== this.apiHostname) { // Assuming this.apiHostname is pre-calculated in the constructor
-      throw new Error(`Invalid URL hostname: ${url.hostname}. Expected ${this.apiHostname}.`);
+    if (url.hostname !== this.apiHostname) {
+      throw new Error(
+        `Invalid URL hostname: ${url.hostname}. Expected ${this.apiHostname}.`
+      );
     }
+
+    // Validate the path
+    if (url.pathname.includes('..')) {
+      throw new Error('Path traversal attempt detected.');
+    }
+    // Add additional path validation if needed, for example, checking for allowed prefixes:
+    // if (!url.pathname.startsWith('/allowed-prefix/')) {
+    //   throw new Error(`Invalid path: ${url.pathname}. Path must start with /allowed-prefix/.`);
+    // }
+
 
     if (opts.accountId || opts.useCurrentTeam !== false) {
       if (opts.accountId) {
