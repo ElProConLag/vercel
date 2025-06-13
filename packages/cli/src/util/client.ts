@@ -140,11 +140,15 @@ export default class Client extends EventEmitter implements Stdio {
     if (url.pathname.includes('..')) {
       throw new Error('Path traversal attempt detected.');
     }
-    // Add additional path validation if needed, for example, checking for allowed prefixes:
-    // if (!url.pathname.startsWith('/allowed-prefix/')) {
-    //   throw new Error(`Invalid path: ${url.pathname}. Path must start with /allowed-prefix/.`);
-    // }
+    // Define a whitelist of allowed path prefixes
+    const allowedPathPrefixes = ['/api/', '/v1/', '/v2/'];
 
+    // Validate that the path starts with one of the allowed prefixes
+    if (!allowedPathPrefixes.some(prefix => url.pathname.startsWith(prefix))) {
+      throw new Error(
+        `Invalid path: ${url.pathname}. Path must start with one of the allowed prefixes: ${allowedPathPrefixes.join(', ')}.`
+      );
+    }
 
     if (opts.accountId || opts.useCurrentTeam !== false) {
       if (opts.accountId) {
