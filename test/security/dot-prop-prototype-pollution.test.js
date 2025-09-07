@@ -34,21 +34,29 @@ describe('Dot-prop Prototype Pollution Security', () => {
       // Fallback to simulation if dot-prop is not available
       const simulatedDotProp = {
         set: (obj, path, value) => {
-          // Simulate the fix: dangerous paths should be ignored
-          if (path === '__proto__.polluted' || 
-              path === 'constructor.prototype.polluted' ||
-              path === 'prototype.polluted') {
-            return obj; // Safe behavior: ignore dangerous paths
-          }
+          // Block property names that could pollute the prototype chain at any level
+          const dangerousKeys = ['__proto__', 'constructor', 'prototype'];
+          
           // Simulate normal property setting for safe paths
+          if (typeof path !== 'string') return obj;
           if (path.includes('.')) {
             const parts = path.split('.');
+            // Block at any segment except for the root object itself
+            for (let j = 0; j < parts.length; j++) {
+              if (dangerousKeys.includes(parts[j])) {
+                // Dangerous path detected, ignore the operation
+                return obj;
+              }
+            }
             let current = obj;
             for (let i = 0; i < parts.length - 1; i++) {
               if (!current[parts[i]]) {
                 current[parts[i]] = {};
               }
               current = current[parts[i]];
+            if (dangerousKeys.includes(path)) {
+              return obj;
+            }
             }
             current[parts[parts.length - 1]] = value;
           } else {
