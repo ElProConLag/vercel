@@ -115,7 +115,7 @@ You can manually verify the overrides work by checking that vulnerable versions 
 
 ```bash
 # Check for any remaining vulnerable dot-prop versions
-grep -r "dot-prop.*[34]\.[012]" . --include="*.json" || echo "No 3.x/4.0-4.2.0 versions found"
+grep -E -r "dot-prop.*(3\..*|4\.0\..*|4\.1\..*|4\.2\.0)" . --include="*.json" || echo "No versions < 4.2.1 found"
 grep -r "dot-prop.*5\.[01]\." . --include="*.json" || echo "No 5.0.x/5.1.0 versions found"
 ```
 
