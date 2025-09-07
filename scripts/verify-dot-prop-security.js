@@ -89,8 +89,6 @@ function scanForVulnerableVersions() {
   console.log('\n🔍 Scanning for vulnerable dot-prop versions...');
   
   const vulnerableFiles = [];
-  const vulnerableVersions4x = ['3.0.0', '4.0.0', '4.1.0', '4.2.0']; // Versions before 4.2.1
-  const vulnerableVersions5x = ['5.0.0', '5.1.0']; // 5.x versions before 5.1.1
   
   function findLockFiles(dir) {
     const files = fs.readdirSync(dir, { withFileTypes: true });

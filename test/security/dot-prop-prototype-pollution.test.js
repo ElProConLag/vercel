@@ -59,24 +59,20 @@ describe('Dot-prop Prototype Pollution Security', () => {
       };
       
       const testCases = [
-        { path: '__proto__.polluted', value: true, shouldPollute: false },
-        { path: 'constructor.prototype.polluted', value: true, shouldPollute: false },
-        { path: 'prototype.polluted', value: true, shouldPollute: false },
-        { path: 'safe.property', value: 'safe_value', shouldPollute: false }
+        { path: '__proto__.polluted', value: true },
+        { path: 'constructor.prototype.polluted', value: true },
+        { path: 'prototype.polluted', value: true },
+        { path: 'safe.property', value: 'safe_value' }
       ];
       
-      testCases.forEach(({ path, value, shouldPollute }) => {
+      testCases.forEach(({ path, value }) => {
         const target = {};
         const originalPrototype = Object.prototype;
         
         simulatedDotProp.set(target, path, value);
         
-        if (shouldPollute) {
-          expect(Object.prototype).not.toBe(originalPrototype);
-        } else {
-          expect(Object.prototype).toBe(originalPrototype);
-          expect(({}).polluted).toBeUndefined();
-        }
+        expect(Object.prototype).toBe(originalPrototype);
+        expect(({}).polluted).toBeUndefined();
       });
       
       return;
